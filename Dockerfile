@@ -125,7 +125,9 @@ RUN set -x  \
   && export NGX_BROTLI_STATIC_MODULE_ONLY=1 \
   # Download and extract NGINX source
   && cd /tmp \
-  && curl -fSL http://nginx.org/download/nginx-$NGINX_VERSION.tar.gz -o nginx.tar.gz \
+  && export NGINX_VERSION=${NGINX_VERSION:-$(curl -fsSL "http://nginx.org/en/download.html" | grep -Eo 'nginx-[0-9]+\.[0-9]+\.[0-9]+' | head -n1 | cut -d- -f2 || echo "1.27.4")} \
+  && echo "Using NGINX_VERSION: $NGINX_VERSION" \
+  && curl -fSL http://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz -o nginx.tar.gz \
   && mkdir -p /usr/src \
   && tar -zxC /usr/src -f nginx.tar.gz \
   && rm nginx.tar.gz \
